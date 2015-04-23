@@ -1,6 +1,28 @@
-var app = angular.module('coopEval', []);
+var app = angular.module('coopEval', ['ngRoute']);
 
-app.controller('registrationController', function($http, $scope) {
+// configure routes
+app.config(function($routeProvider, $locationProvider) {
+  $routeProvider
+
+    .when('/', {
+      templateUrl: 'register.html',
+      controller: 'registrationController'
+    })
+
+    .when('/signedUp', {
+        templateUrl: 'signed_up.html',
+        controller: 'signedUpController'
+    });
+
+});
+
+app.controller('navController', function($location, $scope) {
+    $scope.showLogin = function() {
+        return '/' === $location.path();
+    };
+});
+
+app.controller('registrationController', function($http, $location, $scope) {
     $scope.signUp = function() {
         var postObj = {
             username: $scope.username,
@@ -17,9 +39,13 @@ app.controller('registrationController', function($http, $scope) {
               data: JSON.stringify(postObj)
             }).
             success(function(data) {
-              console.log('save success')
+              $location.path('/signedUp');
             }).
             error(function() {}
         );
     };
+});
+
+app.controller('signedUpController', function() {
+
 });
